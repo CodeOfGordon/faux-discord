@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="/styles/login.css">
+</head>
+<body>
+    <div id="background">
+        <form method="post" action="/login/login_submitted">
+            <h2 id="main-text">Welcome back!</h1>
+            <h3 id="sub-text">We're so excited to see you again!</h2>
+            <% if (error) { %>
+                <div id="error"><%= error %></div>
+                <br/>
+            <% }; %>
+
+            <div id="group">
+                <label for="username">
+                    <strong id="sub-text">USERNAME <span>* </span></strong>
+                </label>
+                <input name="username" required/>
+            </div>
+
+            <div id="group">
+                <label for="password">
+                    <strong id="sub-text">PASSWORD  <span>* </span></strong>
+                </label>
+                <input name="password" type="password" required/>
+            </div>
+
+            <div id="group">
+                <button name="submit" type="submit">Log In</button>
+                <p>
+                    Need an account? <span><a href="/register/">Register</a>
+                </p>
+            </div>
+        </form>
+    <img/>
+</body>
+</html>
