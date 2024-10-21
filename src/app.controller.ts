@@ -1,7 +1,6 @@
-import { Controller, Get, Redirect, Render, Req, Res } from '@nestjs/common';
+import { Controller, Get, Redirect, Render, Req, Res, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Request, Response } from 'express';
-import { rootCertificates } from 'tls';
 
 
 @Controller()
@@ -9,15 +8,13 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
+  @Render('app')
   root(@Req() req: Request, @Res() res: Response) {
-    // URGENT: Decide whether to login with username or email. Change dto and jwt token based on this
 
-    // check validity of JWT token, if invalid then res.redicrect('/login/)
-    // res.redirect('/login/');
+    
     // TODO:
-    // Set AuthGuard globally by creating a @Public() decorator for /login and /register controllers
-    // Learn exception filters and pipes
-    // Set up exception filter pipe so if AuthGuard fails, auto-redirects to login
+    // Figure out how to correctly store jwt token
+    // Set up session thing to return error msg to login render when redirecting
 
   }
   // getHello(): string {

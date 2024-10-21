@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import * as cookieParser from 'cookie-parser';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -17,7 +18,7 @@ async function bootstrap() {
   // Serve static assets from the 'public' directory
   app.useStaticAssets(join(__dirname, '..', 'public'));
 
-
+  app.use(cookieParser());
   
   await app.listen(process.env.PORT || 3000);
 }

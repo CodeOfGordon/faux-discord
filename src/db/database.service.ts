@@ -15,15 +15,14 @@ users table:
 export class DatabaseService {
     private pool: Pool = newPool;
 
-    async checkDuplicate(username: string): Promise<string> {
+    async checkDuplicate(username: string) {
         const sql = 'SELECT COUNT(username) FROM users WHERE username = $1;';
         const user = [username];
         const result = await this.pool.query(sql, user);
         const duplicates = parseInt(result.rows[0].count);
         if (duplicates > 0) {
-            return 'Username already exists';
+            throw new BadRequestException('Username already exists');
         }
-        return '';
     }
 
     async createUser(email: string, display_name: string, username: string, password: string) { // birthDate; Date
@@ -42,26 +41,12 @@ export class DatabaseService {
         }
     }
 
-    async loginUser(username: string, password: string): Promise<number> {
+    async selectUser(username: string) {
         const sql = 'SELECT * FROM users WHERE username = $1;';
         const values = [username];
-        try {
-            const result = await this.pool.query(sql, values);
-            const user = result.rows[0];
-            console.log(username);
-            
-            if (!user) throw new NotFoundException('User could not be found');
-            else if (await bcrypt.compare(password, user.password)) throw new UnauthorizedException('Password does not match');
-            
-            return user.id;
-        } catch(error) {
-            
-            if (isInstance(error, NotFoundException) || isInstance(error, UnauthorizedException)) {
-                throw error;
-            } else {
-                throw new InternalServerErrorException('There was a problem with the database', {cause: error, description: error.message});
-            }
-        }
+        const result = await this.pool.query(sql, values);
+        const user = result.rows[0];
+        return user;
     }
 
 }

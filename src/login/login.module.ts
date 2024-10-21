@@ -1,20 +1,12 @@
 import { Module } from '@nestjs/common';
 import { LoginController } from './login.controller';
 import { DatabaseModule } from 'src/db/database.module';
-import { JwtModule } from '@nestjs/jwt';
 import { LoginService } from './login.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 
 @Module({
-  imports: [
-    DatabaseModule, 
-    JwtModule.registerAsync({
-      useFactory: () => ({
-        secret: process.env.JWT_SECRET,
-        signOptions: { expiresIn: '7d' }
-      })
-
-  })],
+  imports: [DatabaseModule, AuthModule],
   controllers: [LoginController],
   providers: [LoginService]
 })

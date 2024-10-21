@@ -1,15 +1,17 @@
-import { Body, Controller, Get, Param, Post, Redirect, Req, Res, Render } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, Render } from '@nestjs/common';
 import { Response } from 'express';
-import { registerDto } from 'dto/register.dto';
-import { DatabaseService } from 'src/db/database.service';
+import { registerDto } from 'src/common/dto/register.dto';
 import { Public } from 'src/common/decorators/public.decorator';
+import { RegisterService } from './register.service';
 
 
-@Controller('register')
 @Public()
+@Controller('register')
 export class RegisterController {
     MINYEAR = 1872;
-    constructor(private readonly databaseService: DatabaseService) {}
+    constructor(
+        private readonly registerService: RegisterService
+    ) {}
 
     @Get()
     @Render('register')
@@ -17,24 +19,16 @@ export class RegisterController {
         const error = null;
         const currYear = new Date().getFullYear();
         const minYear = this.MINYEAR;
-        
         return { currYear, minYear, error };
     }
     
     @Post('register_submitted')
     @Render('register')
-    async submitAccount(@Body() registerDto: registerDto, @Res() res: Response): Promise<any> {
-        const { display_name, username, password, email, month, day, year } = registerDto;
+    async registerAccount(@Body() registerDto: registerDto, @Res() res: Response): Promise<any> {
         const currYear = new Date().getFullYear();
         const minYear = this.MINYEAR;
-        
         try {
-            // Insert a unique user
-            const check = await this.databaseService.checkDuplicate(username);
-            if (check) throw new Error(check);
-            await this.databaseService.createUser(email, display_name, username, password);
-
-            res.redirect('/login/');
+           await this.registerService.submitAccount(registerDto, res);
         } catch(error) {
             return { currYear, minYear, error: error };
         }
